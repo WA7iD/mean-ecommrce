@@ -1,0 +1,66 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="assets/images/freshcart-logo.svg" />
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse d-flex justify-content-between navbar-collapse"
+      id="navbarNavAltMarkup"
+    >
+      <div class="navbar-nav">
+        <a class="nav-link" routerLink="home">Home</a>
+        <a class="nav-link" routerLink="products">Products</a>
+        <a class="nav-link" routerLink="cart">Cart</a>
+        <a class="nav-link" routerLink="categories">Categories</a>
+        <a class="nav-link" routerLink="brands">Brands</a>
+      </div>
+
+      <div class="d-flex gap-2">
+        <a class="nav-link" href="#">
+          <i class="fa-brands fa-facebook"></i>
+        </a>
+        <a class="nav-link" href="#">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        <a class="nav-link" href="#">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a class="nav-link" href="#">
+          <i class="fa-brands fa-tiktok"></i>
+        </a>
+        <a class="nav-link" href="#">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+
+        <!-- Add a conditional to display the user's name when logged in -->
+        <ng-container *ngIf="getUserName()">
+          <a class="nav-link">
+            {{ getUserName() }}
+          </a>
+          <a class="nav-link" (click)="signOut()" style="cursor: pointer">
+            Sign Out
+          </a>
+        </ng-container>
+        <ng-container *ngIf="!getUserName()">
+          <a class="nav-link" routerLink="login"> Sign In </a>
+          <a class="nav-link" routerLink="register"> Register </a>
+        </ng-container>
+        <ng-container *ngIf="isUserAdmin()">
+          <a class="nav-link" routerLink="dashboard">Admin</a>
+        </ng-container>
+        <!-- Display login and register links when not logged in -->
+      </div>
+    </div>
+  </div>
+</nav>

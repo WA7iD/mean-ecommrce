@@ -1,0 +1,11 @@
+<div class="container">
+  <h1 class="section-header">Categories</h1>
+  <div class="row justify-content-between">
+    <div class="col-md-2" *ngFor="let category of categories">
+      <div class="category">
+        <img [src]="category.image" alt="{{ category.name }}" />
+      </div>
+      <p class="text-center cate-name">{{ category.name }}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="container">
+  <h1>Product Details</h1>
+  <div *ngIf="product">
+    <div class="row">
+      <!-- Product Images Slider -->
+      <div class="col-md-6">
+        <carousel>
+          <slide *ngFor="let image of product.images">
+            <img [src]="image" alt="{{ product.title }}" class="img-fluid" />
+          </slide>
+        </carousel>
+      </div>
+
+      <!-- Product Details -->
+      <div class="col-md-6">
+        <h2>{{ product.title }}</h2>
+        <p>Description: {{ product.description }}</p>
+        <p>Price: {{ product.price }}</p>
+        <p>Available Colors:</p>
+        <ul class="d-flex" style="list-style: none">
+          <li
+            class="color-dot"
+            *ngFor="let color of product.availableColors"
+            style="background-color:{{ color }};"
+          ></li>
+        </ul>
+        <p>Quantity: {{ product.quantity }}</p>
+
+        <!-- Add to Cart button (you can implement this later) -->
+        <button (click)="addToCart()" class="btn btn-primary">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

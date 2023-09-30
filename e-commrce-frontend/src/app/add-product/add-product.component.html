@@ -1,0 +1,47 @@
+<div class="container">
+  <h2>Add Product</h2>
+  <form (ngSubmit)="handleSubmit()" [formGroup]="addProductForm">
+    <input type="text" formControlName="prodName" placeholder="Product Name" />
+    <textarea
+      formControlName="prodDescription"
+      placeholder="Product Description"
+    ></textarea>
+    <input
+      type="number"
+      formControlName="priceBefore"
+      placeholder="Price Before Discount"
+    />
+    <input
+      type="number"
+      formControlName="priceAfter"
+      placeholder="Price After Discount (Optional)"
+    />
+    <input
+      type="number"
+      formControlName="qty"
+      placeholder="Quantity Available"
+    />
+
+    <label for="CatID">Select Category:</label>
+    <select formControlName="CatID">
+      <option value="" disabled>Select Category</option>
+
+      <option *ngFor="let category of categories" value="{{ category._id }}">
+        {{ category.name }}
+      </option>
+    </select>
+
+    <label for="BrandID">Select Brand:</label>
+    <select formControlName="BrandID">
+      <option value="" disabled>Select Brand</option>
+
+      <option *ngFor="let brand of brands" value="{{ brand._id }}">
+        {{ brand.name }}
+      </option>
+    </select>
+
+    <input type="file" multiple (change)="onFileChange($event)" />
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
