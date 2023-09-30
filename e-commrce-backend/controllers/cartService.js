@@ -19,52 +19,34 @@ const calcTotalCartPrice = async (cart) => {
   return totalPrice;
 };
 
-// @desc      Add product to cart
-// @route     POST /api/v1/cart
-// @access    Private/User
 exports.addProductToCart = asyncHandler(async (req, res, next) => {
   const { productId, color } = req.body;
 
   const product = await Product.findById(productId);
 
-  // 1) Check if there is cart for logged user
   let cart = await Cart.findOne({ cartOwner: req.user._id });
 
   if (cart) {
-    // 2) check if product exists for user cart
     const itemIndex = cart.products.findIndex(
       (p) =>
         p.product.toString() === req.body.productId &&
         p.color === req.body.color
     );
     if (itemIndex > -1) {
-      //product exists in the cart, update the quantity
       const productItem = cart.products[itemIndex];
       productItem.count += 1;
       cart.products[itemIndex] = productItem;
     } else {
-      //product does not exists in cart, add new item
       cart.products.push({ product: productId, color, price: product.price });
     }
-    // cart = await cart.save();
-    // return res.status(201).send(cart);
   }
   if (!cart) {
-    //no cart for user, create new cart
     cart = await Cart.create({
       cartOwner: req.user._id,
       products: [{ product: productId, color, price: product.price }],
     });
   }
-  // let totalPrice = 0;
-  // cart.products.forEach((prod) => {
-  //   totalPrice += prod.price * prod.count;
-  // });
 
-  // cart.totalCartPrice = totalPrice;
-  // await cart.save();
-
-  // Calculate total cart price
   await calcTotalCartPrice(cart);
 
   return res.status(200).json({
@@ -75,13 +57,9 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Update product quantity
-// @route     Put /api/v1/cart/:itemId
-// @access    Private/User
 exports.updateCartProductCount = asyncHandler(async (req, res, next) => {
   const { itemId } = req.params;
   const { count } = req.body;
-  // 1) Check if there is cart for logged user
   const cart = await Cart.findOne({ cartOwner: req.user._id })
     .populate({
       path: "products.product",
@@ -104,7 +82,6 @@ exports.updateCartProductCount = asyncHandler(async (req, res, next) => {
   );
 
   if (itemIndex > -1) {
-    //product exists in the cart, update the quantity
     const productItem = cart.products[itemIndex];
     productItem.count = count;
     cart.products[itemIndex] = productItem;
@@ -113,7 +90,6 @@ exports.updateCartProductCount = asyncHandler(async (req, res, next) => {
       new ApiError(`No Product Cart item found for this id: ${itemId}`)
     );
   }
-  // Calculate total cart price
   await calcTotalCartPrice(cart);
 
   return res.status(200).json({
@@ -123,9 +99,6 @@ exports.updateCartProductCount = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Get logged user cart
-// @route     GET /api/v1/cart
-// @access    Private/User
 exports.getLoggedUserCart = asyncHandler(async (req, res, next) => {
   const cart = await Cart.findOne({ cartOwner: req.user._id })
     .populate({
@@ -151,9 +124,6 @@ exports.getLoggedUserCart = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Remove product from cart
-// @route     DELETE /api/v1/cart/:itemId
-// @access    Private/User
 exports.removeCartProduct = asyncHandler(async (req, res, next) => {
   const { itemId } = req.params;
   const cart = await Cart.findOneAndUpdate(
@@ -174,7 +144,6 @@ exports.removeCartProduct = asyncHandler(async (req, res, next) => {
       populate: { path: "category", select: "name -_id", model: "Category" },
     });
 
-  // Calculate total cart price
   await calcTotalCartPrice(cart);
 
   return res.status(200).json({
@@ -184,13 +153,8 @@ exports.removeCartProduct = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Clear logged user cart
-// @route     DELETE /api/v1/cart
-// @access    Private/User
 exports.clearLoggedUserCart = asyncHandler(async (req, res, next) => {
   await Cart.findOneAndDelete({ cartOwner: req.user._id });
 
   res.status(204).send();
 });
-
-// update cartItem quantity
